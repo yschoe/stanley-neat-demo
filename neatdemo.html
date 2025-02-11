@@ -1,0 +1,546 @@
+<html>
+
+<head>
+<title> NEAT Robot Competitive Coevolution Demo </title>
+</head>
+
+<body text="black" bgcolor="white" link="blue" vlink="blue" alink="aqua">
+
+<center><h1>NEAT Robot Competitive Coevolution Demo</h1></center>
+
+<i> This page is based on neuroevolution research by <a href="http://www.cs.utexas.edu/users/kstanley/">Kenneth Stanley</a>.
+Movies come from preliminary experiments</i>
+<br>
+<br>
+
+<h2> Continual competitive coevolution utilizes growing structures </h2>
+
+    <table width="60%" border="0" cellpadding="0" cellspacing="0">
+<tr> 
+        <td width="100%" valign="top">
+
+This page contains <a href="neatdemo.html#movies">links to movies</a> (in the form of GIF animations)
+depicting evolved robot controllers controlling simulated
+Khepera-like robots in a real-time competitive task.  The controllers
+were evolved using the <a href="http://nn.cs.utexas.edu/project-view.php?RECORD_KEY(Projects)=ProjID&amp;ProjID(Projects)=14">
+NEAT method</a> for evolving neural network topolgies and
+weights using a genetic algorithm.  All of the movies
+depict evolved neuro-controllers from a single run of hundreds of
+generations.  The movies show the robots' behavior in a task, and
+also show the actual evolved neural network controllers
+with neurons firing in real-time, so you can see what the
+robots are "thinking" as they compete.
+<br><br>
+The main point of the experiment is to show that evolving
+neural networks using NEAT allows a new, more powerful
+kind of competitive coevolution to take place.
+This powerful form of coevolution is called
+<i>continual competitive coevolution</i>.
+The idea is that because NEAT allows networks to add
+structure indefinitely, a competing population
+in competitive coevolution should always be able to 
+supplement a strategy by <i>complexifying</i> that
+strategy through the addition of new structure.
+The hope is that increasingly sophisticated strategies
+will utilize increasingly complex structures, preventing
+the arms race from stagnating. 
+
+<br>
+
+<h2> The competition </h2>
+
+The competitive task is challenging.
+The robots always start out in a world with exactly the
+same configuration.  9 pieces of food are placed in 
+the world, with the two robots in the center.  The image below 
+shows what the world looks like.  Please adjust your browser
+so that the entire image is visible on your screen:
+<br><br>
+
+<img src="robotmovies/sample.jpg">
+
+<br><br>
+
+On the left of the image is the world where the robots
+collect food.  On the right are the robots' neural
+network controllers.  The yellow robot is controlled by
+the upper neural network, and the red robot is controlled
+by the lower network.  
+
+<br><br>
+
+Each network has 3 numbers to its left.  These numbers represent:
+<li>Food collected<br>
+<li>Total distance (pixels) traveled<br>
+<li>Energy<br>
+<br>
+Whenever a robot encounters a piece of food, its energy
+goes up by 500.  At the same time, energy decreases
+the more distance a robot travels.  There is no limit
+to how low energy can go; it can easily sink below zero.
+<br><br>
+
+The only way for a robot to win the compition is to
+collide with its opponent while its energy is higher
+than its opponent's energy.  This rule makes the
+game interesting, because the predator-prey relationship
+can constantly shift back and forth, depending on
+food being eaten.  Energy is used for no other purpose
+than to determine who kills whom in a collision; it
+does not affect robot's ability to move, although
+moving can be risky when energy is low, especially when
+no food is available, since the robot with lower energy
+can be killed.  As long as a robot has higher energy, it
+is safe.
+<br><br>
+
+The rules of the game encourage an unusual phenomenon
+to evolve: switching behavior.  Robots must learn to
+change their goals quickly depending on which robot has
+the most energy at any given time.  A robot with lower
+energy may decide to stay put and hope its opponent wastes
+energy by running around, or it may try to find more food.
+As you can imagine, complex strategies arise.  The main
+reason that this scenario leads to complexity is that
+unlike in standard predator-prey tasks, both the predator
+and the prey are evolving to outwit each other,
+and networks must be capable of playing <i>both</i> roles.
+<br><br>
+
+<h2>Understanding the Movies</h2>
+
+In the image above, the world contains two robots, each
+surrounded by 2 concentric rings.  The rings represent
+rings of range sensors, which work like Khepera range sensors.
+However, one ring of sensors can detect robots, and the
+other can detect food.  Each ring has 4 sensors with slightly
+overlapping arcs of sensitivity.  The inner ring contains
+the food sensors, and the outer ring holds the robot sensors.
+When you watch the movies, you can actually see the sensor
+activation levels on the rings themselves, and you can see
+the sensors swiveling as the robots turn.  Sensor activations
+are depicted as squares of different sizes.
+Note that the robot who currently has the higher energy level
+has yellow sensor rings, whereas the robot with lower
+energy has black sensor rings.  This way, it is easy to see
+who could be playing predator at any given time.
+<br><br>
+
+The sensors map to the inputs of of the neural networks on
+the right of the image.  The inputs are at the bottom of
+each network:
+<li>The first four inputs correspond to
+the food range sensors (the inner ring)<br>  
+<li>the second four inputs correspond to the robot range sensors (the outer
+ring).<br>
+<li>Sensor 9 is an energy difference sensor.  This is the sensor 
+that tells the robot if it has higher or lower energy than its
+opponent (so it can change its strategy accordingly)<br>
+<li>Sensor 10 is a single wall sensor, telling the robot
+its distance from the border in the direction it is facing<br>
+<li>Sensor 11 is a bias always set to 1<br>
+ 
+<br>
+
+Each network has two motor outputs (at the top).  The outputs
+represent the force to be applied the left and right motor.
+Each motor drives a wheel.  Thus, running the left motor
+alone causes a turn to the right, etc.  Each output
+has a number above it representing its current activation
+on a scale of 0 to 100,000 (actual outputs are between 0 and 1).  
+<br><br>
+
+The neural networks depict evolved topologies.
+They are composed of:<br>
+<br>
+<li> Neurons are red squares.  The larger the square, the higher
+the activation (you can watch neurons fire in real time by
+seeing their squares grow and shrink)
+<li> Excitatory connections are black links<br>
+<li> Inhibitory connects are blue links<br>
+<li> Recurrent connections are bent lines instead of straight lines
+     (usually forming loops), also either blue or black<br>
+<br><br>
+
+Since NEAT evolves arbitrary topologies, topologies can
+become quite complex.  The visualizations are designed
+to do their best to display the networks as clearly as
+possible.  
+<br><br>
+
+
+<h2>The experiment</h2>
+
+<a href="http://nn.cs.utexas.edu/pub-view.php?RECORD_KEY(Pubs)=PubID&amp;PubID(Pubs)=116">
+As usual </a>,
+NEAT begins with zero-hidden-node networks and evolves topologies
+and links from there.  
+If you want to know more details about how the NEAT
+method works, see <a href="http://nn.cs.utexas.edu/pub-view.php?RECORD_KEY(Pubs)=PubID&amp;PubID(Pubs)=116">
+our paper</a>. 
+The initial generation contained two populations, A and B, all
+with uniform zero-hidden-node topologies.  A and B were pitted
+against each other in a competitive coevolution host/parasite 
+framework (see "New Method for Competitive Coevolution", Rosin and
+Belew, 1996).  As the generations progress, an arms race
+built up between A and B.  The results show that
+increasingly sophisticated structures continually arose
+(for hundreds of generations), each newly dominant strategy
+containing significantly more structure than the previous.
+Also, there was no circularity in the dominance relationships.
+
+<br><br>
+
+<h2>Who's the best?</h2>
+
+Before moving to the animations, we should address one serious
+question: How do we know that a network is <i> better </i> 
+than another network from just a single competition?
+There are two answers to this question:
+<br><br>
+
+First, the training scenarios are all deterministic (meaning
+that the food and robots start in exactly the same positions).
+Therefore, if a network wins against another network in
+this setup, it will always win, since we did not introduce
+noise to the sensors.
+<br><br>
+
+However, in testing the networks for superiority  
+we should really play many different competitions to attain
+statistical significance demonstrating that one network
+<i>really is</i> better than another.  Thus,
+we played each pair of competitors 1,000 times 
+with slightly different food configurations.  The
+superior network was verified by winning a significant
+majority of these 1,000 competitions.  Thus, the movies below are not
+the <i>reason</i> that we say one network is dominant over
+another.  Rather, they are interesting to observe
+<i>after the fact</i>, knowing which network is dominant.
+Knowing this, we can see what strategy the dominant network actually uses
+by watching the movies. 
+It just so happens that in the movies below, the superior
+network is always the winner, which is not surprising,
+since it is what we expect probabilistically.
+
+<br>
+
+</td>
+
+</tr>
+
+</table>
+
+
+<a name="movies"></a>
+<h2>Here are the movies:</h2>
+
+<hr size="5">
+
+<a href="robotmovies/clip1.gif">
+<center><h3>Early Poor Strategies</h3></a> </center> 
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip1.gif">
+<center>
+<img src="robotmovies/c1.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>These early networks are the champions of generations 1
+           and 3, respectively.  The movie begins well into the 
+	   round.  The yellow robot has spent a long time 
+           moving towards the food extremely slowly.  The movie then
+           begins near the second piece of food.  The Red robot has
+           hardly moved at all.  The yellow network runs into the 
+	   red network mostly by chance after getting its food,
+           although it does show some intelligence.  (In case you
+	   wonder, the yellow network loses badly to later dominant strategies.)
+        </td>
+      </tr>
+</table>
+
+<br>
+
+<hr size="5">
+
+<a href="robotmovies/clip2.gif">
+<center><h3>Standstill (stalemate)</h3></a> </center> 
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip2.gif">
+<center>
+<img src="robotmovies/c2.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>These champions from generations 20 and 50 have evolved
+	      to conserve energy by sitting still and letting the
+	      opponent waste energy by moving.  The problem is
+	      that when two such networks meet, nothing happens.
+	      That's why this clip doesn't move.
+        </td>
+      </tr>
+</table>
+<br>
+
+<hr size="5">
+
+<a href="robotmovies/clip3.gif">
+<center><h3>Later Poor Strategies</h3></a> </center> 
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip3.gif">
+<center>
+<img src="robotmovies/c3.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>The champions from population A and B in generation 40 
+	      compete in this clip.  Neither bother to use food at
+	      all.  The red robot wastes a lot of energy moving 
+	      around to no end, while the yellow robot slowly edges
+	      in.  The strategies are poor because they do not
+	      utilize the food resources.  
+        </td>
+      </tr>
+</table>
+<br>
+
+<hr size="5">
+
+<a href="robotmovies/clip4.gif">
+<center><h3>First Succesful Strategies</h3></a> </center> 
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip4.gif">
+<center>
+<img src="robotmovies/c4.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>Around generation 80, the first good strategy arose
+              in population A.  This competition pits the champion
+	      of generation 80 against an improved version of the
+	      same strategy by the champion of population 95.  Note
+	      that both competitors here are using a sophisticated
+	      strategy with a clear switching behavior among
+	      food gathering, caution, and predation.  The competition
+	      culminates in an interesting standoff where both
+	      players have similar energy levels.  The robots
+	      gingerly approach each other, hoping the other one
+	      will waste more energy in the approach. <p> 
+	      The standoff 
+	      is actually quite complex.  If one robot moves and
+	      the other doesn't, then the mover now has relatively
+              less energy.  However, there is no way to win
+	      if both robots just stand still, leading to an
+	      interesting dilemma.  Since robots only receive
+	      credit for winning, there is great incentive to take
+	      risk.  The robots tend to flinch in an attempt to
+	      get the other robot to move more, leading to an "old west"-like
+	      duel at the end.<p>
+	      Notice that this somewhat sophiticated strategy only
+	      requires a single hidden-node, lending support to
+	      the practice of starting evolution minimally.
+	      
+	  
+        </td>
+      </tr>
+</table>
+<br>
+
+<hr size="5">
+
+<a href="robotmovies/clip5.gif">
+<center><h3>Dramatic Standoff</h3></a> </center> 
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip5.gif">
+<center>
+<img src="robotmovies/c5.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>The movie shows an "old west"-style standoff similar to
+	      the one in the previous clip, but even more cautious
+	      and drawn-out.  The competitors here are champions
+	      from generations 95 and 90.  The movie begins as
+	      the standoff begins, skipping the preceding food-gathering. 
+        </td>
+      </tr>
+</table>
+<br>
+
+<hr size="5">
+
+<a href="robotmovies/clip6.gif">
+<center><h3>Later Dominant Strategy Defeats Earlier Good Strategy</h3></a> </center>
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip6.gif">
+<center>
+<img src="robotmovies/c6.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>A later dominant strategy arose around the 190th
+           generation in population B.  By generation 221, this
+	   new strategy dominated the world.  This movie
+	   shows the champion of generation 221 playing the
+	   champion of generation 130, which is a highly
+	   optimized version of the first good strategy to arise.
+	   (The lower network, which is the red robot, is from
+	   generation 221.)
+	   <p>Notice the later dominant strategy is more cautious
+	   than the first, and tends to be conservative about
+           collecting enough food to be safe.  We can see the
+	   red robot change its stratgy in mid-stride at
+	   several points, deciding to get more food instead 
+	   of pursue the yellow robot.<p>
+	   Important to the theory behind continual coevolution,
+	   the higher sophistication of the later dominant
+	   strategy utilizes a more complex structure than the
+	   inferior network.<p>
+	   Out of 1000 competitions from slightly different
+	   starting configurations, the later dominant 
+	   won 617, the earlier strategy won 376, and the 
+	   remaining competitions were draws (timed out).   
+        </td>
+      </tr>
+</table>
+<br>
+
+<hr size="5">
+
+<a href="robotmovies/clip7.gif">
+<center><h3>Highest Dominant Strategy Defeats Prior Dominant</h3></a></center> 
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip7.gif">
+<center>
+<img src="robotmovies/c7.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>The highest dominant strategy arose in generation 313 
+	   in population A 
+ This new strategy appears as the lower neural
+	   network (red robot).  The complexity has clearly
+	   gone up significantly.  The champion of generation 210
+	   (the prior dominant strategy) is the upper robot (yellow)<p>
+	   Notice that the red robot takes very clever advantage of
+	   the yellow robot's tendency to collect as much food as
+	   possible.  The red robot decides to do nothing while
+	   the yellow robot rolls to the second-to-last piece
+	   of food.  In a surprisingly insightful move,
+	   the red robot then dashes for the last piece of food,
+	   ensuring victory through its closer proximity.  The yellow
+	   robot is caught with nowhere to go and quickly devoured.<p>
+	   In 1,000 different competitions between these two strategies,
+	   the highest dominant won 532, and the prior dominant 
+	   won 448.  The remainder were draws (timed out).
+	   
+        </td>
+      </tr>
+</table>
+<br>
+
+<hr size="5">
+
+<a href="robotmovies/clip8.gif">
+<center><h3>Highest Dominant Strategy Defeats First Good Strategy (no circularity)</h3></a></center>  
+
+    <table width="75%" border="0" cellpadding="5" cellspacing="5">
+       <tr>
+        <td width="25%" valign="top">
+        <p align="left">
+<a href="robotmovies/clip8.gif">
+<center>
+<img src="robotmovies/c8.jpg"></a> 
+</p> </center>
+        </td>
+        <td valign="top">
+           <p>To be sure that stragies are indeed progressing
+	   in sophistication in a total order, we need to check for
+	   circular dominance.  In other words, even tough the
+	   highest dominant strategy is superior to a
+	   prior dominant, the even-earlier first good strategy might still
+	   be able to defeat the third dominant, creating a circle of
+	   dominance.  Circular dominance is not what we want in 
+	   competitive coevolution.<p>
+	   The movie shows the champion of generation 95 (yellow)
+	   playing the champion of generation 313 (red).
+	   To check for circular dominance, we test the later
+	   dominant strategy against the earlier strategy.
+	   The highest dominant appears to prevail by being more
+	   decisive than the earlier strategy, as this movie shows.  The yellow robot
+	   simply finds itself in trouble before there is time to
+	   do anything about it.<p>
+	   In 1,000 different competitions, the highest dominant 
+	   won 599, and the other won 313.  The remainder were ties.
+        </td>
+      </tr>
+</table>
+<br>
+
+<hr size="5">
+
+<h2> Conclusion </h2>
+
+The experiment shows that evolving structure can contribute to
+increasing sophistication in coevolution.
+Complex goal switching behavior occurs in increasingly
+sophisticated strategies with more and more neural network structure.
+We have also tried ablating structure from complex networks and found
+structural ablations to be damaging, showing that structure is
+playing an important role.
+
+<br>
+<h3> Contact the author here: </h3>
+<a href="mailto:kstanley@cs.utexas.edu">kstanley@cs.utexas.edu</a><br>
+
+</html>
+
+
+<!--
+     FILE ARCHIVED ON 08:19:33 Jul 02, 2022 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 21:26:04 Feb 10, 2025.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->
+<!--
+playback timings (ms):
+  captures_list: 0.739
+  exclusion.robots: 0.037
+  exclusion.robots.policy: 0.021
+  esindex: 0.014
+  cdx.remote: 18.893
+  LoadShardBlock: 3189.417 (3)
+  PetaboxLoader3.datanode: 3024.611 (4)
+  PetaboxLoader3.resolve: 444.954 (2)
+  load_resource: 391.535
+-->
